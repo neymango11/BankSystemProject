@@ -12,11 +12,11 @@ public class User {
     }
 
     //Getters
-    public String getUsername(){
+    public String getUsername() {
        return username;
     }
-    public String getPassword(){
-       return password;
+    public String getPassword() {
+        return password;
     }
     public String getRole(){
        return role;
