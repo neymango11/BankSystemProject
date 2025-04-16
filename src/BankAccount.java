@@ -1,26 +1,34 @@
 /*
-* EXPLANATION OF THE CLASS
-* Aman
+* Aman Mohamed
+* -------BankAccount Class------
+* This class is in charge of creating Checking and Saving Accounts
+* and it will tie it to there userID
+* When creating there Savings and Checkings they will be able to deposit money right there
+*
+*
 * */
 
 public class BankAccount {
-    private int accountId;
-    private User user; // creating a user object
+    private String accountId;
+    private int userID; // Reference from user class
     private double balance;
     private String accountType; // Stores checking or savings
 
-    public BankAccount(int accountId, User user, double balance, String accountType) {
+    public BankAccount(String accountId, int userID, double balance, String accountType) {
         this.accountId = accountId;
-        this.user = user;
+        this.userID = userID;
         this.balance = balance;
         this.accountType = accountType.toUpperCase(); // method to store as a uppercase
     }
 
     //GETTERS
-    public int getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
+    public int getUserID() {
+        return userID;
+    }
 
     public double getBalance() {
         return balance;
@@ -30,20 +38,26 @@ public class BankAccount {
         return accountType;
     }
 
-    //SETTERS
-    public void setAccountId(int newAccountId){
-        this.accountId = newAccountId;
+
+    // Creating the Checking Accounts
+    // Will save them as name-C-1001
+    public static BankAccount createChecking(String name, int userID, double initialDeposit) {
+        String accountID = name + "-C-" + userID;
+        return new BankAccount(accountID, userID, initialDeposit, "CHECKING");
+}
+
+    // Creating the Saving Accounts
+    // Will save them as name-S-1000
+    public static BankAccount createSavings(String name, int userID, double initialDeposit) {
+        String accountID = name + "-S-" + userID;
+        return new BankAccount(accountID, userID, initialDeposit, "SAVING");
     }
 
-    public void setBalance(double newBalance) {
-        this.balance = newBalance;
-    }
 
-    public void setAccountType(String newAccountType){
-        this.accountType = newAccountType;
-    }
+
 
     // Deposit Method
+    // Checks if amount is greater then 0 if so it will add it to the balance
     public void deposit(double amount) {
         if (amount > 0) {
             balance = balance + amount;
@@ -56,6 +70,7 @@ public class BankAccount {
     }
 
     // Withdrawal Method
+    // Checks if the balance is greater then or equal to the amount if so it will extract it from the balance
     public void withdraw(double amount) {
         if (amount > 0) {
             if (balance >= amount) {
@@ -71,5 +86,8 @@ public class BankAccount {
             System.out.println("Invalid withdrawal amount. It must be greater then 0.");
         }
     }
+
+    // Method to add to CSV files
+
 
 }
