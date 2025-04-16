@@ -3,27 +3,26 @@
 * -------BankAccount Class------
 * This class is in charge of creating Checking and Saving Accounts
 * and it will tie it to there userID
-* When creating there Savings and Checkings they will be able to deposit money right there
-*
+* When creating there Savings and Checking they will be able to deposit money right there
 *
 * */
 
 public class BankAccount {
-    private String accountId;
+    private String accountID;
     private int userID; // Reference from user class
     private double balance;
     private String accountType; // Stores checking or savings
 
     public BankAccount(String accountId, int userID, double balance, String accountType) {
-        this.accountId = accountId;
+        this.accountID = accountId;
         this.userID = userID;
         this.balance = balance;
         this.accountType = accountType.toUpperCase(); // method to store as a uppercase
     }
 
     //GETTERS
-    public String getAccountId() {
-        return accountId;
+    public String getAccountID() {
+        return accountID;
     }
 
     public int getUserID() {
@@ -52,8 +51,6 @@ public class BankAccount {
         String accountID = name + "-S-" + userID;
         return new BankAccount(accountID, userID, initialDeposit, "SAVING");
     }
-
-
 
 
     // Deposit Method
