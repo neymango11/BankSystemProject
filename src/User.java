@@ -24,19 +24,27 @@ public class User {
     public int getUserID(){
        return userID;
     }
-
-    //Setters
-    public void setUsername(String newUsername){
-       this.username = newUsername;
-    }
-    public void setPassword(String newPassword){
-       this.password = newPassword;
-    }
-    public void setRole (String newRole){
-       this.role = newRole;
-    }
-    public void setUserID(int newUserID){
-       this.userID = newUserID;
+    
+    // Method to create account
+    public static User newUser(String username, String password, String role, Integer userID) {
+       return new User(username, password, role, userID);
     }
 
+
+
+
+
+
+
+    // Method to reset username
+
+
+
+
+
+
+
+    // Method to reset password
 }
+
+
