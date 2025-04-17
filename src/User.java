@@ -5,12 +5,14 @@ public class User {
     private String role;
     private int userID;
 
+
+    private static int idCounter = 1000;
     // Constructors & parameters
    public User(String username, String password, String role, Integer userID) {
         this.username = username; // users login name
         this.password = password; // users password
         this.role = "STANDARD USER"; // the users role (STANDARD USER or ADMIN)
-        this.userID = userID; // a unique identifier for this user
+        this.userID = idCounter++; // a unique identifier for this user
     }
 
     // Getter
