@@ -59,7 +59,7 @@ public class BankAccount {
         if (amount > 0) {
             balance = balance + amount;
             System.out.println("You have Deposited: $" + amount);
-            //add a way to log it into csv
+            // In Progress to add a transaction object
         }
         else {
             System.out.println("Invalid deposit amount. It has to be greater than 0");
@@ -73,7 +73,7 @@ public class BankAccount {
             if (balance >= amount) {
                 balance = balance - amount;
                 System.out.println("You have withdrew: $" + amount);
-                //add a way to log it into csv
+                // In Progress to add a transaction object
             }
             else {
                 System.out.println("Insufficient funds for withdrawal");
