@@ -14,6 +14,7 @@ public class Main {
         users.put("admin", new User("admin", "admin123", "ADMIN", 9999));
 
         while (true) {
+            // Main loop for showing the main menu repeatedly
             System.out.println("\n========== MAIN MENU ==========");
             System.out.println("1. Login");
             System.out.println("2. Create Account");
@@ -23,14 +24,14 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    loginMenu();
+                    loginMenu();  // If user chooses 1, go to login menu
                     break;
                 case "2":
-                    createUser();
+                    createUser(); // If user chooses 2, go to create user method
                     break;
                 case "3":
                     System.out.println("Thanks for using the Bank System. Goodbye!");
-                    return;
+                    return; // Ends the program
                 default:
                     System.out.println("Invalid choice.");
             }
@@ -40,9 +41,12 @@ public class Main {
     private static void loginMenu() {
         System.out.print("Username: ");
         String uname = scanner.nextLine();
+        // Ask for username
         System.out.print("Password: ");
         String pass = scanner.nextLine();
+        // Ask for password
 
+        // Check if user exists and password matches
         if (users.containsKey(uname) && users.get(uname).getPassword().equals(pass)) {
             User currentUser = users.get(uname);
             System.out.println("Welcome, " + currentUser.getUsername() + "!");
@@ -54,27 +58,37 @@ public class Main {
             }
         } else {
             System.out.println("Login failed. Invalid username or password.");
+            // Login failed message
+
         }
     }
     private static void createUser() {
         System.out.print("Enter username: ");
         String uname = scanner.nextLine();
+        // Get a new username from user
         System.out.print("Enter password: ");
         String pass = scanner.nextLine();
+        // Get a new password from user
 
         int userID = new Random().nextInt(9000) + 1000;
+        // Generate a random user ID between 1000 and 9999
         User newUser = new User(uname, pass, "STANDARD USER", userID);
         users.put(uname, newUser);
+        // Create a new User object and add it to the users map
         System.out.println("Account created for " + uname + "wither user ID: " + userID);
+        // Notify user about successful account creation (typo: "wither" should be "with")\
 
-        //or, create an account right away
+
+        // Ask if user wants to open a savings account immediately
         System.out.print("Would you like to open a savings account now? (y/n): ");
         if (scanner.nextLine().equalsIgnoreCase("y")) {
             System.out.print("Initial deposit: ");
             double deposit = Double.parseDouble(scanner.nextLine());
+            // Read initial deposit as a double
             BankAccount acc = BankAccount.createSavings(uname, userID, deposit);
             accounts.put(userID, acc);
-            System.out.println()adadaasdadwad
+            // Create savings account and store it in the accounts map
+            System.out.println();
         }
 
 
