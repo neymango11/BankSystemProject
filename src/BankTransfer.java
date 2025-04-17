@@ -15,9 +15,9 @@ public class BankTransfer {
     // Transfers the specified amount between two BankAccount objects 
 
     public static void transfer(BankAccount fromAccount, BankAccount toAccount, double amount) {
-        String fromId = fromAccount.getAccountId();
-        String toId = toAccount.getAccountId();
-
+        String fromId = fromAccount.getAccountID();
+        String toId = toAccount.getAccountID();
+        
 
 
 
