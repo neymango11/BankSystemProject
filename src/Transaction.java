@@ -25,16 +25,25 @@ public class Transaction {
         this.transactionId = idCounter++;
         this.timestamp = LocalDateTime.now().toString(); // gets the date/time of the transaction
         this.sourceAccountId = sourceAccountId;
-        this.destinationAccountId = destinationAccountId;
+        this.destinationAccountId = destinationAccountIdString;
         this.amount = amount;
         this.transactionType = transactionType;
-        this.note = note;
+        this.note = noteString;
     }
 
 
     // converts the transaction to a coma-separted string for csv file writing
     
-    public String toCSV(){
-        return transactionId + "," + timestamp + ","+ sourceAccountId + "," + destinationAccountId + "," + amount + "," + transactionType + "," + note;
-    }
+    public String toCSV() {
+    return String.format("%-15d %-25s %-20s %-20s %-10.2f %-12s %s",
+        transactionId,
+        timestamp,
+        sourceAccountId,
+        destinationAccountId,
+        amount,
+        transactionType,
+        note
+    );
+}
+
 }
