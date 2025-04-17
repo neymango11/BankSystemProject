@@ -50,7 +50,7 @@ public class Main {
             if (currentUser.getRole().equalsIgnoreCase("ADMIN")) {
                 //adminMenu(currentUser);
             } else {
-                userMenu(currentUser);
+                //userMenu(currentUser);
             }
         } else {
             System.out.println("Login failed. Invalid username or password.");
@@ -67,11 +67,14 @@ public class Main {
         users.put(uname, newUser);
         System.out.println("Account created for " + uname + "wither user ID: " + userID);
 
-        //or, create an acocunt right away
+        //or, create an account right away
         System.out.print("Would you like to open a savings account now? (y/n): ");
         if (scanner.nextLine().equalsIgnoreCase("y")) {
             System.out.print("Initial deposit: ");
-            double depoist = Double.parseDouble()
+            double deposit = Double.parseDouble(scanner.nextLine());
+            BankAccount acc = BankAccount.createSavings(uname, userID, deposit);
+            accounts.put(userID, acc);
+            System.out.println()
         }
 
 
