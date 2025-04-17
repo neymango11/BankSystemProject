@@ -4,16 +4,20 @@ import java.util.*;
 
 public class Main {
     static Scanner scanner = new Scanner (System.in);
+    // Scanner object for reading user input from the console
     static Map<String, User> users = new HashMap<>();
+    // Stores all registered users with their username as the key
     static Map<Integer, BankAccount> accounts = new HashMap<>();
+    // Stores all bank accounts with user ID as the key
 
     public static void main(String[] args) {
         System.out.println("Welcome to the Bank System");
 
-        //admin preload
+        // Preloading an admin account
         users.put("admin", new User("admin", "admin123", "ADMIN", 9999));
 
         while (true) {
+            // Main loop for showing the main menu repeatedly
             System.out.println("\n========== MAIN MENU ==========");
             System.out.println("1. Login");
             System.out.println("2. Create Account");
@@ -40,9 +44,12 @@ public class Main {
     private static void loginMenu() {
         System.out.print("Username: ");
         String uname = scanner.nextLine();
+        // Ask for username
         System.out.print("Password: ");
         String pass = scanner.nextLine();
+        // Ask for password
 
+        // Check if user exists and password matches
         if (users.containsKey(uname) && users.get(uname).getPassword().equals(pass)) {
             User currentUser = users.get(uname);
             System.out.println("Welcome, " + currentUser.getUsername() + "!");
@@ -59,21 +66,28 @@ public class Main {
     private static void createUser() {
         System.out.print("Enter username: ");
         String uname = scanner.nextLine();
+        // Get a new username from user
         System.out.print("Enter password: ");
         String pass = scanner.nextLine();
+        // Get a new password from user
 
         int userID = new Random().nextInt(9000) + 1000;
+        // Generate a random user ID between 1000 and 9999
         User newUser = new User(uname, pass, "STANDARD USER", userID);
         users.put(uname, newUser);
+        // Create a new User object and add it to the users map
         System.out.println("Account created for " + uname + "wither user ID: " + userID);
+        // Notify user about successful account creation (typo: "wither" should be "with")
 
         //or, create an account right away
         System.out.print("Would you like to open a savings account now? (y/n): ");
         if (scanner.nextLine().equalsIgnoreCase("y")) {
             System.out.print("Initial deposit: ");
             double deposit = Double.parseDouble(scanner.nextLine());
+            // Read initial deposit as a double
             BankAccount acc = BankAccount.createSavings(uname, userID, deposit);
             accounts.put(userID, acc);
+            // Create savings account and store it in the accounts map
             System.out.println();
         }
 
