@@ -1,59 +1,44 @@
-
+// Represents a basic user (not admin) of the banking system
 public class User {
     private String username;
     private String password;
     private String role;
     private int userID;
 
-
     private static int idCounter = 1000;
-    // Constructors & parameters
-   public User(String username, String password, String role, Integer userID) {
-        this.username = username; // users login name
-        this.password = password; // users password
-        this.role = "STANDARD USER"; // the users role (STANDARD USER or ADMIN)
-        this.userID = idCounter++; // a unique identifier for this user
+
+    public User(String username, String password, String role, Integer userID) {
+        this.username = username;
+        this.password = password;
+        this.role = "STANDARD USER";
+        this.userID = idCounter++;
     }
 
-    // Getter
-    public String getUsername() {
-       return username; // retrieving username
-    }
-    public String getPassword() {
-        return password; // retrieving password
-    }
-    public String getRole(){
-       return role; // retrieving role
-    }
-    public int getUserID(){
-       return userID; // retrieving userID
-    }
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getRole() { return role; }
+    public int getUserID() { return userID; }
 
-
-    // Setter - User will be able to reset their own user/pass
-    public void setPassword(String newPassword) {
-        if (newPassword.equals(this.password)) {
-            System.out.println("Please choose a different password.");
+    // User changes their own password
+    public void setPassword(String currentPassword, String newPassword) {
+        if (!this.password.equals(currentPassword)) {
+            System.out.println("❌ Incorrect current password.");
+        } else if (newPassword.equals(this.password)) {
+            System.out.println("❌ New password must be different.");
         } else {
             this.password = newPassword;
+            System.out.println("✅ Password changed successfully.");
         }
     }
 
-
-    // Setter method to reset username
-
-
-    // Method to create account
-    public static User newUser(String username, String password, String role, Integer userID) {
-       return new User(username, password, role, userID);
+    // Admin resets password
+    public void resetPassword(String newPassword) {
+        this.password = newPassword;
+        System.out.println("✅ Admin reset the password.");
     }
 
-
-    // Method to reset username
-
-
-
-    // Method to reset password
+    // Admin changes username
+    void forceSetUsername(String newUsername) {
+        this.username = newUsername;
+    }
 }
-
-

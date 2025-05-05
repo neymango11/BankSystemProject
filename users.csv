@@ -1,0 +1,4 @@
+username,password,role,userID
+admin1,adminpass,STANDARD USER,1000
+john_updated,johnNEWpass123,STANDARD USER,1001
+bruce,bruce789,STANDARD USER,1003
