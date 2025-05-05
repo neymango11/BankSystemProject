@@ -9,7 +9,8 @@ public class DemoMain {
         //User nebil = new User("Nebil", "M", "STANDARD", null );
 
 
-        User Aman = User.newUser()
+        User Aman = User.newUser("Aman", "pas123", "STANDARD", null);
+        System.out.println("User created: " + Aman.getUsername());
 
     }
 }
