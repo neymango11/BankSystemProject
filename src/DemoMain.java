@@ -9,7 +9,6 @@ public class DemoMain {
         //User nebil = new User("Nebil", "M", "STANDARD", null );
 
 
-        User Aman = User.newUser()
 
     }
 }
