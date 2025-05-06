@@ -282,9 +282,10 @@ public class DemoMain {
             System.out.println("2. Make a Deposit");
             System.out.println("3. Make a Withdrawal");
             System.out.println("4. Transfer Money");
-            System.out.println("5. Change Password");
-            System.out.println("6. Logout");
-            System.out.print("Enter your choice (1-6): ");
+            System.out.println("5. View Transaction History");
+            System.out.println("6. Change Password");
+            System.out.println("7. Logout");
+            System.out.print("Enter your choice (1-7): ");
 
             String input = scanner.nextLine().trim();
             int userChoice;
@@ -292,7 +293,7 @@ public class DemoMain {
             try {
                 userChoice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number between 1 and 6.");
+                System.out.println("Invalid input. Please enter a number between 1 and 7.");
                 continue;
             }
 
@@ -310,14 +311,17 @@ public class DemoMain {
                     handleTransfer(user, scanner);
                     break;
                 case 5:
-                    handlePasswordChange(user, scanner);
+                    handleTransactionHistory(user);
                     break;
                 case 6:
+                    handlePasswordChange(user, scanner);
+                    break;
+                case 7:
                     userRunning = false;
                     System.out.println("Logged out successfully.");
                     break;
                 default:
-                    System.out.println("\nInvalid choice. Please enter a number between 1 and 6.");
+                    System.out.println("\nInvalid choice. Please enter a number between 1 and 7.");
             }
         }
     }
@@ -553,6 +557,27 @@ public class DemoMain {
         user.setPassword(currentPass, newPass);
     }
 
+    private static void handleTransactionHistory(User user) {
+        System.out.println("\n=== Transaction History ===");
+        List<Transaction> transactions = TransactionHistory.getUserTransactions(user.getUserID());
+
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;
+        }
+
+        for (Transaction transaction : transactions) {
+            System.out.println("\nTransaction ID: " + transaction.getTransactionId());
+            System.out.println("Date: " + transaction.getTimestamp());
+            System.out.println("Type: " + transaction.getType());
+            System.out.println("Amount: $" + transaction.getAmount());
+            System.out.println("From: " + transaction.getFromAccount());
+            System.out.println("To: " + transaction.getToAccount());
+            System.out.println("Note: " + transaction.getNote());
+            System.out.println("-------------------");
+        }
+    }
+
     private static void handleAdminOperations(Admin admin, List<User> users, Scanner scanner) {
         boolean adminRunning = true;
 
@@ -565,8 +590,9 @@ public class DemoMain {
             System.out.println("5. View All Accounts");
             System.out.println("6. Admin Deposit");
             System.out.println("7. Admin Withdrawal");
-            System.out.println("8. Logout");
-            System.out.print("Enter your choice (1-8): ");
+            System.out.println("8. View All Transactions");
+            System.out.println("9. Logout");
+            System.out.print("Enter your choice (1-9): ");
 
             int adminChoice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -660,6 +686,10 @@ public class DemoMain {
                     break;
 
                 case 8:
+                    handleAdminTransactionHistory();
+                    break;
+
+                case 9:
                     adminRunning = false;
                     System.out.println("Logged out successfully.");
                     break;
@@ -667,6 +697,27 @@ public class DemoMain {
                 default:
                     System.out.println("\nInvalid choice. Please try again.");
             }
+        }
+    }
+
+    private static void handleAdminTransactionHistory() {
+        System.out.println("\n=== All Transactions ===");
+        List<Transaction> transactions = TransactionHistory.getAllTransactions();
+
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;
+        }
+
+        for (Transaction transaction : transactions) {
+            System.out.println("\nTransaction ID: " + transaction.getTransactionId());
+            System.out.println("Date: " + transaction.getTimestamp());
+            System.out.println("Type: " + transaction.getType());
+            System.out.println("Amount: $" + transaction.getAmount());
+            System.out.println("From: " + transaction.getFromAccount());
+            System.out.println("To: " + transaction.getToAccount());
+            System.out.println("Note: " + transaction.getNote());
+            System.out.println("-------------------");
         }
     }
 }

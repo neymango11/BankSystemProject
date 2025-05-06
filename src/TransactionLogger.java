@@ -12,6 +12,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class TransactionLogger {
     // Path to the transaction CSV file
@@ -23,30 +24,30 @@ public class TransactionLogger {
      * @param transaction The Transaction object to be logged.
      */
     public static void log(Transaction transaction) {
-        // Create data directory if it doesn't exist
-        new File("data").mkdirs();
-
-        File file = new File(FILE_PATH);
-
-        // Determine if the file is new or empty
-        boolean fileExists = file.exists();
-        boolean isNewFile = !fileExists || file.length() == 0;
-
-        try (FileWriter writer = new FileWriter(FILE_PATH, true)) {
-
-            // If new or empty, add column headers
-            if (isNewFile) {
-                writer.write(String.format(
-                        "%-15s %-25s %-20s %-20s %-10s %-12s %s\n",
-                        "Transaction ID", "Timestamp", "From Account", "To Account", "Amount", "Type", "Note"
-                ));
+        try {
+            // Create data directory if it doesn't exist
+            File dataDir = new File("data");
+            if (!dataDir.exists()) {
+                dataDir.mkdirs();
             }
 
-            // Write the formatted transaction line
-            writer.write(transaction.toCSV() + "\n");
+            File file = new File(FILE_PATH);
+            boolean isNewFile = !file.exists() || file.length() == 0;
 
+            // Use PrintWriter for better formatting
+            try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, true))) {
+                // If new or empty, add column headers
+                if (isNewFile) {
+                    writer.println(String.format("%-15s %-25s %-20s %-20s %-10s %-12s %s",
+                            "Transaction ID", "Timestamp", "From Account", "To Account", "Amount", "Type", "Note"));
+                }
+
+                // Write the formatted transaction line
+                writer.println(transaction.toCSV());
+            }
         } catch (IOException e) {
-            System.out.println("Error writing transaction: " + e.getMessage());
+            System.err.println("Error writing transaction: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
