@@ -3,3 +3,4 @@ Transaction ID  Timestamp                 From Account         To Account       
 1               2025-05-06T10:39:31.679305 SYSTEM               a-C-1001             100.00     DEPOSIT      Cash deposit
 1               2025-05-06T10:44:57.594553 SYSTEM               a-C-1001             500.00     DEPOSIT      Cash deposit
 1               2025-05-06T10:48:13.987558 SYSTEM               a-C-1001             322.00     DEPOSIT      Cash deposit
+2               2025-05-06T11:27:16.563864100 SYSTEM               a-S-1001             100.00     DEPOSIT      Cash deposit
