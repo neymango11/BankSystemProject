@@ -4,29 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * BankAccountCSV class handles all file operations for bank accounts.
+ * It provides methods to read, write, update, and delete bank account records
+ * from a CSV file. The CSV file stores account information in the format:
+ * accountID,userID,balance,accountType
+ */
 public class BankAccountCSV {
+    // Path to the CSV file storing bank account data
     private static final String CSV_FILE_PATH = "data/bank_accounts.csv";
 
     /**
-     * This class is where It will read and write from the BankAccount
-     * Class. It will have the accountID, userID, balance, accountType
-     * EXAMPLE - Aman-C-1001,1001,500.0,CHECKING
-     * EXAMPLE - Aman-C-1001,1001,500.0,SAVING
-     *
-     *
-     *  CREATE file path to csv file
-     *
-     *  CREATE a method that will write to the csv file
-     *
-     *  CREATE a method that will delete from csv file (ADMIN)
-     *
-     *  CREATE a method that will read all BankAccounts form csv file (ADMIN)
-     *
-     *
-     * */
-
-    /**
      * Writes a BankAccount to the CSV file
+     * If the account already exists, it will be updated
      * @param account The BankAccount to write
      * @return true if successful, false otherwise
      */
@@ -80,6 +70,7 @@ public class BankAccountCSV {
 
     /**
      * Updates a BankAccount in the CSV file
+     * This method reuses writeToCSV as it handles both new accounts and updates
      * @param account The updated BankAccount
      * @return true if successful, false otherwise
      */
@@ -89,7 +80,7 @@ public class BankAccountCSV {
 
     /**
      * Reads all BankAccounts from the CSV file (Admin function)
-     * @return List of BankAccount objects
+     * @return List of all BankAccount objects in the system
      */
     public static List<BankAccount> readAllAccountsAdmin() {
         List<BankAccount> accounts = new ArrayList<>();
@@ -189,6 +180,9 @@ public class BankAccountCSV {
 
     /**
      * Helper method to create a BankAccount from CSV data
+     * Creates either a SavingsAccount or regular BankAccount based on account type
+     * @param data Array of strings containing account data from CSV
+     * @return Newly created BankAccount object
      */
     private static BankAccount createAccountFromData(String[] data) {
         if (data[3].equals("SAVING")) {

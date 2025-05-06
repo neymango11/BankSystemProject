@@ -1,6 +1,7 @@
-Transaction ID  Timestamp                 From Account         To Account           Amount     Type         Note
-1               2025-05-05T23:08:05.603992100 SYSTEM               a-C-1001             500.00     DEPOSIT      Cash deposit
-1               2025-05-06T10:39:31.679305 SYSTEM               a-C-1001             100.00     DEPOSIT      Cash deposit
-1               2025-05-06T10:44:57.594553 SYSTEM               a-C-1001             500.00     DEPOSIT      Cash deposit
-1               2025-05-06T10:48:13.987558 SYSTEM               a-C-1001             322.00     DEPOSIT      Cash deposit
-2               2025-05-06T11:27:16.563864100 SYSTEM               a-S-1001             100.00     DEPOSIT      Cash deposit
+TransactionID,Timestamp,FromAccount,ToAccount,Amount,Type,Note
+1,2025-05-06T12:15:36.776041100,SYSTEM,a-C-1001,34.00,DEPOSIT,Cash deposit
+2,2025-05-06T12:22:31.774916700,a-S-1001,b-C-1002,100.00,TRANSFER,Transfer between accounts
+1,2025-05-06T12:41:09.511812400,aman-S-1032,SYSTEM,10000.00,WITHDRAWAL,Cash withdrawal
+2,2025-05-06T12:41:31.255647500,aman-S-1032,aman-C-1032,400.00,TRANSFER,Transfer between accounts
+3,2025-05-06T12:41:43.380984600,aman-S-1032,a-C-1001,200.00,TRANSFER,Transfer between accounts
+4,2025-05-06T12:42:44.605806500,aman-S-1032,a-C-1001,500.00,TRANSFER,Transfer between accounts

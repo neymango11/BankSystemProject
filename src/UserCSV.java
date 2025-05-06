@@ -1,10 +1,21 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * UserCSV class handles all file operations for user data.
+ * It provides methods to load users from and save users to a CSV file.
+ * The CSV file stores user information in the format: username,password,role,userID
+ */
 public class UserCSV {
+    // Path to the CSV file storing user data
     private static final String CSV_FILE_PATH = "data/users.csv";
 
-    // Load users from CSV
+    /**
+     * Loads all users from the CSV file
+     * Creates the data directory if it doesn't exist
+     * Handles various error cases and data validation
+     * @return List of User objects loaded from the file
+     */
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
 
@@ -75,7 +86,13 @@ public class UserCSV {
         return users;
     }
 
-    // Save users to CSV
+    /**
+     * Saves all users to the CSV file
+     * Creates a backup of the existing file before saving
+     * Handles various error cases and data validation
+     * @param users List of User objects to save
+     * @return true if save was successful, false otherwise
+     */
     public static boolean saveUsers(List<User> users) {
         if (users == null) {
             System.err.println("❌ Error: Cannot save null users list");

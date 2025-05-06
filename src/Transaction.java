@@ -7,11 +7,11 @@
  * Date: April 10, 2025
  */
 
-import java.time.LocalDateTime;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class Transaction {
     private static int idCounter = 1; //simple tally to auto-generate unique transaction IDs
@@ -24,26 +24,45 @@ public class Transaction {
     private String note;
 
     static {
-        // Initialize idCounter from the last transaction in the file
+        // Initialize idCounter from the highest transaction ID in the file
         try {
             File file = new File("data/transactions.csv");
             if (file.exists()) {
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     String line;
-                    String lastLine = null;
+                    int highestId = 0;
+                    boolean isFirstLine = true;
+                    
                     while ((line = reader.readLine()) != null) {
-                        lastLine = line;
-                    }
-                    if (lastLine != null && !lastLine.trim().isEmpty()) {
-                        String[] parts = lastLine.trim().split("\\s{2,}");
+                        // Skip header line
+                        if (isFirstLine) {
+                            isFirstLine = false;
+                            continue;
+                        }
+                        
+                        // Skip empty lines
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
+                        
+                        String[] parts = line.trim().split("\\s{2,}");
                         if (parts.length >= 1) {
-                            int lastId = Integer.parseInt(parts[0].trim());
-                            idCounter = lastId + 1;
+                            try {
+                                int id = Integer.parseInt(parts[0].trim());
+                                if (id > highestId) {
+                                    highestId = id;
+                                }
+                            } catch (NumberFormatException e) {
+                                // Skip lines that can't be parsed
+                                continue;
+                            }
                         }
                     }
+                    idCounter = highestId + 1;
+                    System.out.println("Initialized transaction ID counter to: " + idCounter);
                 }
             }
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException e) {
             System.err.println("Error initializing transaction ID counter: " + e.getMessage());
         }
     }
@@ -105,7 +124,7 @@ public class Transaction {
 
     // converts the transaction to a formatted string for csv file writing
     public String toCSV() {
-        return String.format("%-15d %-25s %-20s %-20s %-10.2f %-12s %s",
+        return String.format("%d,%s,%s,%s,%.2f,%s,%s",
                 transactionId,
                 timestamp,
                 fromAccount,

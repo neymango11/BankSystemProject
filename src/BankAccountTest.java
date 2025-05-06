@@ -1,8 +1,6 @@
-
 /*
-
  * Test class for BankAccount and BankAccountCSV
- * This class demonstrates the functionality of both classes
+ * This class demonstrates the functionality of both classes through various test cases
  */
 
 public class BankAccountTest {
@@ -10,6 +8,7 @@ public class BankAccountTest {
         System.out.println("=== Starting Bank Account System Test ===\n");
 
         // Test 1: Create accounts
+        // Tests the account creation functionality for both checking and savings accounts
         System.out.println("Test 1: Creating accounts");
         BankAccount checkingAccount = BankAccount.createChecking("Aman", 1001, 500.0);
         BankAccount savingsAccount = BankAccount.createSavings("Aman", 1001, 1000.0);
@@ -18,6 +17,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 2: Test deposits
+        // Verifies that deposits are correctly processed and balance is updated
         System.out.println("Test 2: Testing deposits");
         System.out.println("Initial checking balance: $" + checkingAccount.getBalance());
         checkingAccount.deposit(100.0);
@@ -25,6 +25,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 3: Test withdrawals
+        // Verifies that withdrawals are correctly processed and balance is updated
         System.out.println("Test 3: Testing withdrawals");
         System.out.println("Initial savings balance: $" + savingsAccount.getBalance());
         savingsAccount.withdraw(200.0);
@@ -32,6 +33,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 4: Test invalid operations
+        // Verifies that the system properly handles invalid operations
         System.out.println("Test 4: Testing invalid operations");
         System.out.println("Attempting to withdraw more than balance:");
         savingsAccount.withdraw(10000.0);
@@ -40,6 +42,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 5: Test transfers
+        // Verifies that transfers between accounts work correctly
         System.out.println("Test 5: Testing transfers");
         System.out.println("Before transfer:");
         System.out.println("Checking balance: $" + checkingAccount.getBalance());
@@ -54,6 +57,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 6: Test reading accounts
+        // Verifies that account retrieval by user ID works correctly
         System.out.println("Test 6: Testing account reading");
         System.out.println("Reading all accounts for user 1001:");
         var userAccounts = BankAccount.getUserAccounts(1001);
@@ -65,6 +69,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 7: Test admin functions
+        // Verifies that admin functions for reading all accounts work correctly
         System.out.println("Test 7: Testing admin functions");
         System.out.println("Reading all accounts in system:");
         var allAccounts = BankAccount.getAllAccounts();
@@ -76,6 +81,7 @@ public class BankAccountTest {
         System.out.println();
 
         // Test 8: Test account deletion
+        // Verifies that account deletion works correctly
         System.out.println("Test 8: Testing account deletion");
         System.out.println("Deleting checking account...");
         boolean deleteSuccess = checkingAccount.deleteAccount();

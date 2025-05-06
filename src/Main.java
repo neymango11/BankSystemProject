@@ -17,7 +17,7 @@ public class Main {
             System.out.println("2. Create Account");
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -30,16 +30,21 @@ public class Main {
                     System.out.println("Thanks for using the Bank System. Goodbye!");
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
             }
         }
     }
 
     private static void loginMenu() {
         System.out.print("Username: ");
-        String uname = scanner.nextLine();
+        String uname = scanner.nextLine().trim();
         System.out.print("Password: ");
-        String pass = scanner.nextLine();
+        String pass = scanner.nextLine().trim();
+
+        if (uname.isEmpty() || pass.isEmpty()) {
+            System.out.println("Username and password cannot be empty.");
+            return;
+        }
 
         if (users.containsKey(uname) && users.get(uname).getPassword().equals(pass)) {
             User currentUser = users.get(uname);
@@ -57,9 +62,21 @@ public class Main {
 
     private static void createUser() {
         System.out.print("Enter username: ");
-        String uname = scanner.nextLine();
+        String uname = scanner.nextLine().trim();
+        if (uname.isEmpty()) {
+            System.out.println("Username cannot be empty.");
+            return;
+        }
+        if (users.containsKey(uname)) {
+            System.out.println("Username already exists. Please choose another.");
+            return;
+        }
         System.out.print("Enter password: ");
-        String pass = scanner.nextLine();
+        String pass = scanner.nextLine().trim();
+        if (pass.isEmpty()) {
+            System.out.println("Password cannot be empty.");
+            return;
+        }
 
         int userID = new Random().nextInt(9000) + 1000;
         User newUser = new User(uname, pass, "STANDARD USER", userID);
@@ -68,9 +85,20 @@ public class Main {
 
         // Optional savings account creation
         System.out.print("Would you like to open a savings account now? (y/n): ");
-        if (scanner.nextLine().equalsIgnoreCase("y")) {
+        String openSavings = scanner.nextLine().trim();
+        if (openSavings.equalsIgnoreCase("y")) {
             System.out.print("Initial deposit: ");
-            double deposit = Double.parseDouble(scanner.nextLine());
+            double deposit = 0;
+            try {
+                deposit = Double.parseDouble(scanner.nextLine().trim());
+                if (deposit <= 0) {
+                    System.out.println("Deposit must be positive.");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid deposit amount.");
+                return;
+            }
             BankAccount acc = BankAccount.createSavings(uname, userID, deposit);
             accounts.put(userID, acc);
             System.out.println("✅ Savings account created with ID: " + acc.getAccountID());
@@ -85,7 +113,7 @@ public class Main {
             System.out.println("3. View Transaction History");
             System.out.println("4. Logout");
             System.out.print("Enter choice: ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             BankAccount account = accounts.get(user.getUserID());
             if (account == null) {
@@ -96,13 +124,33 @@ public class Main {
             switch (choice) {
                 case "1":
                     System.out.print("Amount to deposit: ");
-                    double deposit = Double.parseDouble(scanner.nextLine());
+                    double deposit = 0;
+                    try {
+                        deposit = Double.parseDouble(scanner.nextLine().trim());
+                        if (deposit <= 0) {
+                            System.out.println("Deposit must be positive.");
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid deposit amount.");
+                        break;
+                    }
                     account.deposit(deposit);
                     TransactionLogger.log(new Transaction(account.getAccountID(), "-", deposit, "DEPOSIT", "User deposit"));
                     break;
                 case "2":
                     System.out.print("Amount to withdraw: ");
-                    double withdraw = Double.parseDouble(scanner.nextLine());
+                    double withdraw = 0;
+                    try {
+                        withdraw = Double.parseDouble(scanner.nextLine().trim());
+                        if (withdraw <= 0) {
+                            System.out.println("Withdrawal amount must be positive.");
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid withdrawal amount.");
+                        break;
+                    }
                     account.withdraw(withdraw);
                     TransactionLogger.log(new Transaction(account.getAccountID(), "-", withdraw, "WITHDRAW", "User withdrawal"));
                     break;
@@ -112,7 +160,7 @@ public class Main {
                 case "4":
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice. Please enter 1, 2, 3, or 4.");
             }
         }
     }
@@ -126,7 +174,7 @@ public class Main {
             System.out.println("4. Withdraw from User");
             System.out.println("5. Logout");
             System.out.print("Enter choice: ");
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -140,7 +188,17 @@ public class Main {
                     account = getAccountByPrompt();
                     if (account != null) {
                         System.out.print("Amount to deposit: ");
-                        double amount = Double.parseDouble(scanner.nextLine());
+                        double amount = 0;
+                        try {
+                            amount = Double.parseDouble(scanner.nextLine().trim());
+                            if (amount <= 0) {
+                                System.out.println("Deposit must be positive.");
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid deposit amount.");
+                            break;
+                        }
                         admin.depositToUserAccount(account, amount);
                         TransactionLogger.log(new Transaction("ADMIN", account.getAccountID(), amount, "ADMIN DEPOSIT", "Admin deposited"));
                     }
@@ -149,7 +207,17 @@ public class Main {
                     account = getAccountByPrompt();
                     if (account != null) {
                         System.out.print("Amount to withdraw: ");
-                        double amount = Double.parseDouble(scanner.nextLine());
+                        double amount = 0;
+                        try {
+                            amount = Double.parseDouble(scanner.nextLine().trim());
+                            if (amount <= 0) {
+                                System.out.println("Withdrawal amount must be positive.");
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid withdrawal amount.");
+                            break;
+                        }
                         admin.withdrawFromUserAccount(account, amount);
                         TransactionLogger.log(new Transaction(account.getAccountID(), "ADMIN", amount, "ADMIN WITHDRAW", "Admin withdrew"));
                     }
@@ -157,7 +225,7 @@ public class Main {
                 case "5":
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice. Please enter 1, 2, 3, 4, or 5.");
             }
         }
     }
@@ -165,14 +233,14 @@ public class Main {
     private static BankAccount getAccountByPrompt() {
         System.out.print("Enter User ID of the account: ");
         try {
-            int userId = Integer.parseInt(scanner.nextLine());
+            int userId = Integer.parseInt(scanner.nextLine().trim());
             if (accounts.containsKey(userId)) {
                 return accounts.get(userId);
             } else {
                 System.out.println("⚠️ Account not found.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("⚠️ Invalid input.");
+            System.out.println("⚠️ Invalid input. Please enter a valid user ID.");
         }
         return null;
     }
