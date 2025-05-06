@@ -1,0 +1,4 @@
+Transaction ID  Timestamp                 From Account         To Account           Amount     Type         Note
+1               2025-05-05T22:13:39.395576700 SYSTEM               Aman-C-1001          100.00     DEPOSIT      Cash deposit
+2               2025-05-05T22:13:39.402577100 Aman-S-1001          SYSTEM               200.00     WITHDRAWAL   Cash withdrawal
+3               2025-05-05T22:13:39.404576600 Aman-C-1001          Aman-S-1001          150.00     TRANSFER     Transfer between accounts
