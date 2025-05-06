@@ -4,7 +4,7 @@ import java.util.*;
 public class UserCSV {
     private static final String CSV_FILE_PATH = "data/users.csv";
 
-    // Load users from CSV
+    // Load users from CS
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
         
