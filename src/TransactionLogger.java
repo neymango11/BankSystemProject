@@ -15,7 +15,7 @@
  
  public class TransactionLogger {
      // Path to the transaction CSV file
-     private static final String FILE_PATH = "transactions.csv";
+     private static final String FILE_PATH = "data/transactions.csv";
  
      /**
       * Logs a transaction to the transactions.csv file.
@@ -23,6 +23,9 @@
       * @param transaction The Transaction object to be logged.
       */
      public static void log(Transaction transaction) {
+         // Create data directory if it doesn't exist
+         new File("data").mkdirs();
+         
          File file = new File(FILE_PATH);
  
          // Determine if the file is new or empty

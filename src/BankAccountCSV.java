@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BankAccountCSV {
     private static final String CSV_FILE_PATH = "data/bank_accounts.csv";
@@ -33,29 +35,56 @@ public class BankAccountCSV {
             // Create data directory if it doesn't exist
             new File("data").mkdirs();
             
-            // Create file if it doesn't exist
+            // Read existing accounts to check for duplicates
+            Map<String, BankAccount> existingAccounts = new HashMap<>();
             File file = new File(CSV_FILE_PATH);
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (data.length == 4) {
+                        existingAccounts.put(data[0], createAccountFromData(data));
+                    }
+                }
+                br.close();
             }
 
-            // Append the account data to the CSV file
-            FileWriter fw = new FileWriter(file, true);
+            // Check if account already exists
+            if (existingAccounts.containsKey(account.getAccountID())) {
+                // Update existing account
+                existingAccounts.put(account.getAccountID(), account);
+            } else {
+                // Add new account
+                existingAccounts.put(account.getAccountID(), account);
+            }
+
+            // Write all accounts back to file
+            FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
-            
-            String line = String.format("%s,%d,%.2f,%s%n",
-                account.getAccountID(),
-                account.getUserID(),
-                account.getBalance(),
-                account.getAccountType());
-            
-            bw.write(line);
+            for (BankAccount acc : existingAccounts.values()) {
+                String line = String.format("%s,%d,%.2f,%s%n",
+                    acc.getAccountID(),
+                    acc.getUserID(),
+                    acc.getBalance(),
+                    acc.getAccountType());
+                bw.write(line);
+            }
             bw.close();
             return true;
         } catch (IOException e) {
             System.err.println("Error writing to CSV: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Updates a BankAccount in the CSV file
+     * @param account The updated BankAccount
+     * @return true if successful, false otherwise
+     */
+    public static boolean updateAccount(BankAccount account) {
+        return writeToCSV(account); // Reuse writeToCSV as it handles updates
     }
 
     /**
@@ -75,13 +104,7 @@ public class BankAccountCSV {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length == 4) {
-                    BankAccount account = new BankAccount(
-                        data[0],                    // accountID
-                        Integer.parseInt(data[1]),  // userID
-                        Double.parseDouble(data[2]), // balance
-                        data[3]                     // accountType
-                    );
-                    accounts.add(account);
+                    accounts.add(createAccountFromData(data));
                 }
             }
             br.close();
@@ -109,18 +132,14 @@ public class BankAccountCSV {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length == 4 && Integer.parseInt(data[1]) == userID) {
-                    BankAccount account = new BankAccount(
-                        data[0],                    // accountID
-                        Integer.parseInt(data[1]),  // userID
-                        Double.parseDouble(data[2]), // balance
-                        data[3]                     // accountType
-                    );
-                    userAccounts.add(account);
+                    userAccounts.add(createAccountFromData(data));
                 }
             }
             br.close();
         } catch (IOException e) {
             System.err.println("Error reading from CSV: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing account data: " + e.getMessage());
         }
         return userAccounts;
     }
@@ -138,12 +157,13 @@ public class BankAccountCSV {
             }
 
             // Read all accounts except the one to delete
-            List<String> lines = new ArrayList<>();
+            Map<String, BankAccount> accounts = new HashMap<>();
             BufferedReader br = new BufferedReader(new FileReader(file));
             String line;
             while ((line = br.readLine()) != null) {
-                if (!line.startsWith(accountID + ",")) {
-                    lines.add(line);
+                String[] data = line.split(",");
+                if (data.length == 4 && !data[0].equals(accountID)) {
+                    accounts.put(data[0], createAccountFromData(data));
                 }
             }
             br.close();
@@ -151,8 +171,13 @@ public class BankAccountCSV {
             // Write back all accounts except the deleted one
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
-            for (String l : lines) {
-                bw.write(l + "\n");
+            for (BankAccount acc : accounts.values()) {
+                String accountLine = String.format("%s,%d,%.2f,%s%n",
+                    acc.getAccountID(),
+                    acc.getUserID(),
+                    acc.getBalance(),
+                    acc.getAccountType());
+                bw.write(accountLine);
             }
             bw.close();
             return true;
@@ -163,45 +188,22 @@ public class BankAccountCSV {
     }
 
     /**
-     * Updates a BankAccount in the CSV file
-     * @param account The updated BankAccount
-     * @return true if successful, false otherwise
+     * Helper method to create a BankAccount from CSV data
      */
-    public static boolean updateAccount(BankAccount account) {
-        try {
-            File file = new File(CSV_FILE_PATH);
-            if (!file.exists()) {
-                return false;
-            }
-
-            // Read all accounts and update the matching one
-            List<String> lines = new ArrayList<>();
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith(account.getAccountID() + ",")) {
-                    // Replace with updated account data
-                    line = String.format("%s,%d,%.2f,%s",
-                        account.getAccountID(),
-                        account.getUserID(),
-                        account.getBalance(),
-                        account.getAccountType());
-                }
-                lines.add(line);
-            }
-            br.close();
-
-            // Write back all accounts
-            FileWriter fw = new FileWriter(file);
-            BufferedWriter bw = new BufferedWriter(fw);
-            for (String l : lines) {
-                bw.write(l + "\n");
-            }
-            bw.close();
-            return true;
-        } catch (IOException e) {
-            System.err.println("Error updating CSV: " + e.getMessage());
-            return false;
+    private static BankAccount createAccountFromData(String[] data) {
+        if (data[3].equals("SAVING")) {
+            return new SavingsAccount(
+                data[0],                    // accountID
+                Integer.parseInt(data[1]),  // userID
+                Double.parseDouble(data[2]) // balance
+            );
+        } else {
+            return new BankAccount(
+                data[0],                    // accountID
+                Integer.parseInt(data[1]),  // userID
+                Double.parseDouble(data[2]), // balance
+                data[3]                     // accountType
+            );
         }
     }
 }

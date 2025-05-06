@@ -14,15 +14,32 @@ public class BankAccount {
     private int userID; // Reference from user class
     private double balance;
     private String accountType; // Stores checking or savings
+    private double apy; // Annual Percentage Yield for savings accounts
 
     public BankAccount(String accountId, int userID, double balance, String accountType) {
         this.accountID = accountId;
         this.userID = userID;
         this.balance = balance;
         this.accountType = accountType.toUpperCase(); // method to store as a uppercase
-        
-        // Save the new account to CSV
-        BankAccountCSV.writeToCSV(this);
+        this.apy = calculateAPY(balance); // Calculate APY based on initial balance
+    }
+
+    // Calculate APY based on balance
+    private double calculateAPY(double balance) {
+        if (this.accountType.equals("SAVING")) {
+            if (balance >= 10000) return 0.05;      // 5% APY for $10,000+
+            if (balance >= 5000) return 0.03;       // 3% APY for $5,000+
+            if (balance >= 1000) return 0.02;       // 2% APY for $1,000+
+            return 0.01;                           // 1% APY for < $1,000
+        }
+        return 0.0; // No APY for checking accounts
+    }
+
+    // Update APY when balance changes
+    private void updateAPY() {
+        if (this.accountType.equals("SAVING")) {
+            this.apy = calculateAPY(this.balance);
+        }
     }
 
     //GETTERS
@@ -42,18 +59,26 @@ public class BankAccount {
         return accountType;
     }
 
+    public double getAPY() {
+        return apy;
+    }
+
     // Creating the Checking Accounts
     // Will save them as name-C-1001
     public static BankAccount createChecking(String name, int userID, double initialDeposit) {
         String accountID = name + "-C-" + userID;
-        return new BankAccount(accountID, userID, initialDeposit, "CHECKING");
+        BankAccount account = new BankAccount(accountID, userID, initialDeposit, "CHECKING");
+        BankAccountCSV.writeToCSV(account);
+        return account;
     }
 
     // Creating the Saving Accounts
     // Will save them as name-S-1000
     public static BankAccount createSavings(String name, int userID, double initialDeposit) {
         String accountID = name + "-S-" + userID;
-        return new BankAccount(accountID, userID, initialDeposit, "SAVING");
+        BankAccount account = new SavingsAccount(accountID, userID, initialDeposit);
+        BankAccountCSV.writeToCSV(account);
+        return account;
     }
 
     // Deposit Method
@@ -72,6 +97,9 @@ public class BankAccount {
                 "Cash deposit"     // note
             );
             TransactionLogger.log(depositTransaction);
+            
+            // Update APY for savings accounts
+            updateAPY();
             
             // Update the account in CSV after deposit
             BankAccountCSV.updateAccount(this);
@@ -98,6 +126,9 @@ public class BankAccount {
                     "Cash withdrawal" // note
                 );
                 TransactionLogger.log(withdrawalTransaction);
+                
+                // Update APY for savings accounts
+                updateAPY();
                 
                 // Update the account in CSV after withdrawal
                 BankAccountCSV.updateAccount(this);
@@ -135,6 +166,10 @@ public class BankAccount {
                     "Transfer between accounts" // note
                 );
                 TransactionLogger.log(transferTransaction);
+                
+                // Update APY for both accounts if they are savings
+                updateAPY();
+                destinationAccount.updateAPY();
                 
                 // Update both accounts in CSV
                 BankAccountCSV.updateAccount(this);
