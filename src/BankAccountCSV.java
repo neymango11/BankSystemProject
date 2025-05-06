@@ -34,7 +34,7 @@ public class BankAccountCSV {
         try {
             // Create data directory if it doesn't exist
             new File("data").mkdirs();
-            
+
             // Read existing accounts to check for duplicates
             Map<String, BankAccount> existingAccounts = new HashMap<>();
             File file = new File(CSV_FILE_PATH);
@@ -64,10 +64,10 @@ public class BankAccountCSV {
             BufferedWriter bw = new BufferedWriter(fw);
             for (BankAccount acc : existingAccounts.values()) {
                 String line = String.format("%s,%d,%.2f,%s%n",
-                    acc.getAccountID(),
-                    acc.getUserID(),
-                    acc.getBalance(),
-                    acc.getAccountType());
+                        acc.getAccountID(),
+                        acc.getUserID(),
+                        acc.getBalance(),
+                        acc.getAccountType());
                 bw.write(line);
             }
             bw.close();
@@ -173,10 +173,10 @@ public class BankAccountCSV {
             BufferedWriter bw = new BufferedWriter(fw);
             for (BankAccount acc : accounts.values()) {
                 String accountLine = String.format("%s,%d,%.2f,%s%n",
-                    acc.getAccountID(),
-                    acc.getUserID(),
-                    acc.getBalance(),
-                    acc.getAccountType());
+                        acc.getAccountID(),
+                        acc.getUserID(),
+                        acc.getBalance(),
+                        acc.getAccountType());
                 bw.write(accountLine);
             }
             bw.close();
@@ -193,16 +193,16 @@ public class BankAccountCSV {
     private static BankAccount createAccountFromData(String[] data) {
         if (data[3].equals("SAVING")) {
             return new SavingsAccount(
-                data[0],                    // accountID
-                Integer.parseInt(data[1]),  // userID
-                Double.parseDouble(data[2]) // balance
+                    data[0],                    // accountID
+                    Integer.parseInt(data[1]),  // userID
+                    Double.parseDouble(data[2]) // balance
             );
         } else {
             return new BankAccount(
-                data[0],                    // accountID
-                Integer.parseInt(data[1]),  // userID
-                Double.parseDouble(data[2]), // balance
-                data[3]                     // accountType
+                    data[0],                    // accountID
+                    Integer.parseInt(data[1]),  // userID
+                    Double.parseDouble(data[2]), // balance
+                    data[3]                     // accountType
             );
         }
     }

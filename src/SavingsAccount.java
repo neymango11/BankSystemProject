@@ -1,6 +1,6 @@
 // SavingsAccount.java
 // Developed by Vincent Bayode
-// This class represents a savings account and includes logic for applying interest 
+// This class represents a savings account and includes logic for applying interest
 // based on APY tiers.
 
 public class SavingsAccount extends BankAccount {
@@ -43,7 +43,7 @@ public class SavingsAccount extends BankAccount {
 
     /**
      * Determines the correct APY based on balance.
-     * 
+     *
      * @param balance The current balance
      * @return The APY as a decimal (e.g., 0.01 = 1%)
      */

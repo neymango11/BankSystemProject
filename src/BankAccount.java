@@ -1,11 +1,11 @@
 /*
-* Aman Mohamed
-* -------BankAccount Class------
-* This class is in charge of creating Checking and Saving Accounts
-* and it will tie it to there userID
-* When creating there Savings and Checking they will be able to deposit money right there
-*
-* */
+ * Aman Mohamed
+ * -------BankAccount Class------
+ * This class is in charge of creating Checking and Saving Accounts
+ * and it will tie it to there userID
+ * When creating there Savings and Checking they will be able to deposit money right there
+ *
+ * */
 
 import java.util.List;
 
@@ -87,20 +87,20 @@ public class BankAccount {
         if (amount > 0) {
             balance = balance + amount;
             System.out.println("You have Deposited: $" + amount);
-            
+
             // Create and log the deposit transaction
             Transaction depositTransaction = new Transaction(
-                "SYSTEM",           // source account (SYSTEM for deposits)
-                this.accountID,     // destination account
-                amount,            // amount
-                "DEPOSIT",         // transaction type
-                "Cash deposit"     // note
+                    "SYSTEM",           // source account (SYSTEM for deposits)
+                    this.accountID,     // destination account
+                    amount,            // amount
+                    "DEPOSIT",         // transaction type
+                    "Cash deposit"     // note
             );
             TransactionLogger.log(depositTransaction);
-            
+
             // Update APY for savings accounts
             updateAPY();
-            
+
             // Update the account in CSV after deposit
             BankAccountCSV.updateAccount(this);
         }
@@ -116,20 +116,20 @@ public class BankAccount {
             if (balance >= amount) {
                 balance = balance - amount;
                 System.out.println("You have withdrew: $" + amount);
-                
+
                 // Create and log the withdrawal transaction
                 Transaction withdrawalTransaction = new Transaction(
-                    this.accountID,  // source account
-                    "SYSTEM",        // destination account (SYSTEM for withdrawals)
-                    amount,         // amount
-                    "WITHDRAWAL",   // transaction type
-                    "Cash withdrawal" // note
+                        this.accountID,  // source account
+                        "SYSTEM",        // destination account (SYSTEM for withdrawals)
+                        amount,         // amount
+                        "WITHDRAWAL",   // transaction type
+                        "Cash withdrawal" // note
                 );
                 TransactionLogger.log(withdrawalTransaction);
-                
+
                 // Update APY for savings accounts
                 updateAPY();
-                
+
                 // Update the account in CSV after withdrawal
                 BankAccountCSV.updateAccount(this);
             }
@@ -153,28 +153,28 @@ public class BankAccount {
             if (balance >= amount) {
                 // Withdraw from this account
                 balance = balance - amount;
-                
+
                 // Deposit to destination account
                 destinationAccount.balance = destinationAccount.balance + amount;
-                
+
                 // Create and log the transfer transaction
                 Transaction transferTransaction = new Transaction(
-                    this.accountID,           // source account
-                    destinationAccount.accountID, // destination account
-                    amount,                  // amount
-                    "TRANSFER",              // transaction type
-                    "Transfer between accounts" // note
+                        this.accountID,           // source account
+                        destinationAccount.accountID, // destination account
+                        amount,                  // amount
+                        "TRANSFER",              // transaction type
+                        "Transfer between accounts" // note
                 );
                 TransactionLogger.log(transferTransaction);
-                
+
                 // Update APY for both accounts if they are savings
                 updateAPY();
                 destinationAccount.updateAPY();
-                
+
                 // Update both accounts in CSV
                 BankAccountCSV.updateAccount(this);
                 BankAccountCSV.updateAccount(destinationAccount);
-                
+
                 return true;
             }
             else {

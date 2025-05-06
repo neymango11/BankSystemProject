@@ -11,7 +11,15 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = "STANDARD USER";
-        this.userID = idCounter++;
+        if (userID != null) {
+            this.userID = userID;
+            // Update idCounter if this userID is higher
+            if (userID >= idCounter) {
+                idCounter = userID + 1;
+            }
+        } else {
+            this.userID = idCounter++;
+        }
     }
 
     public String getUsername() { return username; }
