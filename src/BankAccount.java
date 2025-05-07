@@ -15,21 +15,19 @@ import java.util.List;
  * Each account is tied to a user ID and can perform basic banking operations.
  */
 public class BankAccount {
-    // Unique identifier for the account
+
     private String accountID;
-    // Reference to the user who owns this account
+    // Unique identifier for the account
     private int userID;
-    // Current balance in the account
+    // Reference to the user who owns this account
     private double balance;
-    // Type of account (CHECKING or SAVING)
+    // Current balance in the account
     private String accountType;
+    // Type of account (CHECKING or SAVING)
 
     /**
-     * Constructor to create a new bank account
-     * @param accountId Unique identifier for the account
-     * @param userID ID of the user who owns this account
-     * @param balance Initial balance in the account
-     * @param accountType Type of account (CHECKING or SAVING)
+     Constructor to create a BankAccount to create one you need to have a accountId, userID
+     balance, and accountType
      */
     public BankAccount(String accountId, int userID, double balance, String accountType) {
         this.accountID = accountId;
@@ -56,11 +54,9 @@ public class BankAccount {
     }
 
     /**
-     * Creates a new checking account for a user
-     * @param name Name of the account holder
-     * @param userID ID of the user
-     * @param initialDeposit Initial deposit amount
-     * @return Newly created checking account
+     To create a Checking Account you need a name, userId, initialDeposit
+     FORMAT =  name-C-userID
+     It will create an instance of the BankAccount class and write this to our CSV FILE
      */
     public static BankAccount createChecking(String name, int userID, double initialDeposit) {
         String accountID = name + "-C-" + userID;
@@ -70,11 +66,9 @@ public class BankAccount {
     }
 
     /**
-     * Creates a new savings account for a user
-     * @param name Name of the account holder
-     * @param userID ID of the user
-     * @param initialDeposit Initial deposit amount
-     * @return Newly created savings account
+     * To create a savingsAccount you need a name, userId, initialDeposit
+     * FORMAT = name-S-userID
+     * it will create and instance of the BankAccount class and write this to our CSV FILE
      */
     public static BankAccount createSavings(String name, int userID, double initialDeposit) {
         String accountID = name + "-S-" + userID;
@@ -84,9 +78,11 @@ public class BankAccount {
     }
 
     /**
-     * Deposits money into the account
-     * Creates a transaction record and updates the account balance
-     * @param amount Amount to deposit
+     * DEPOSIT METHOD
+     * it will have a check if the amount is greater than 0 if so it will add it to balance
+     * it will then use the transaction class to create a new transaction object and it will record it from there
+     * after it will print out the transaction with the ID
+     * It will update using the "this" keyword so it know we are refrencing the current object
      */
     public void deposit(double amount) {
         if (amount > 0) {
@@ -114,9 +110,7 @@ public class BankAccount {
     }
 
     /**
-     * Withdraws money from the account
-     * Creates a transaction record and updates the account balance
-     * @param amount Amount to withdraw
+     * Same things as Deposit but it will handle taking out money
      */
     public void withdraw(double amount) {
         if (amount > 0) {
@@ -149,11 +143,12 @@ public class BankAccount {
     }
 
     /**
-     * Transfers money from this account to another account
-     * Creates a transaction record and updates both account balances
-     * @param destinationAccount The account to transfer money to
-     * @param amount The amount to transfer
-     * @return true if transfer was successful, false otherwise
+     * TRANSFER CLASS
+     * this will handle transfering money between accounts
+     * the parameters is a BankAccount object and then the amount
+     * now if the amount is greater then 0 it will deposit it into the destination account
+     * after that it will log it using the transfer class (creating a transfer object)
+     * and then making sure you update both accounts in the CSV FILE
      */
     public boolean transfer(BankAccount destinationAccount, double amount) {
         if (amount > 0) {
