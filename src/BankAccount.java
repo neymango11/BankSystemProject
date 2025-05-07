@@ -23,8 +23,6 @@ public class BankAccount {
     private double balance;
     // Type of account (CHECKING or SAVING)
     private String accountType;
-    // Annual Percentage Yield - interest rate for savings accounts
-    private double apy;
 
     /**
      * Constructor to create a new bank account
@@ -38,33 +36,6 @@ public class BankAccount {
         this.userID = userID;
         this.balance = balance;
         this.accountType = accountType.toUpperCase(); // Store account type in uppercase
-        this.apy = calculateAPY(balance); // Calculate initial APY based on balance
-    }
-
-    /**
-     * Calculates the Annual Percentage Yield (APY) based on the account balance
-     * Different tiers of APY are offered based on the balance amount
-     * @param balance Current balance in the account
-     * @return APY rate as a decimal (e.g., 0.05 for 5%)
-     */
-    private double calculateAPY(double balance) {
-        if (this.accountType.equals("SAVING")) {
-            if (balance >= 10000) return 0.05;      // 5% APY for $10,000+
-            if (balance >= 5000) return 0.03;       // 3% APY for $5,000+
-            if (balance >= 1000) return 0.02;       // 2% APY for $1,000+
-            return 0.01;                           // 1% APY for < $1,000
-        }
-        return 0.0; // No APY for checking accounts
-    }
-
-    /**
-     * Updates the APY when the account balance changes
-     * This ensures the correct interest rate is applied based on the current balance
-     */
-    private void updateAPY() {
-        if (this.accountType.equals("SAVING")) {
-            this.apy = calculateAPY(this.balance);
-        }
     }
 
     // Standard getter methods for account properties
@@ -82,10 +53,6 @@ public class BankAccount {
 
     public String getAccountType(){
         return accountType;
-    }
-
-    public double getAPY() {
-        return apy;
     }
 
     /**
@@ -138,9 +105,6 @@ public class BankAccount {
             System.out.println("Deposit transaction created with ID: " + depositTransaction.getTransactionId());
             TransactionLogger.log(depositTransaction);
 
-            // Update APY for savings accounts
-            updateAPY();
-
             // Update the account in CSV after deposit
             BankAccountCSV.updateAccount(this);
         }
@@ -171,9 +135,6 @@ public class BankAccount {
                 );
                 System.out.println("Withdrawal transaction created with ID: " + withdrawalTransaction.getTransactionId());
                 TransactionLogger.log(withdrawalTransaction);
-
-                // Update APY for savings accounts
-                updateAPY();
 
                 // Update the account in CSV after withdrawal
                 BankAccountCSV.updateAccount(this);
@@ -212,10 +173,6 @@ public class BankAccount {
                         "Transfer between accounts" // note
                 );
                 TransactionLogger.log(transferTransaction);
-
-                // Update APY for both accounts if they are savings
-                updateAPY();
-                destinationAccount.updateAPY();
 
                 // Update both accounts in CSV
                 BankAccountCSV.updateAccount(this);

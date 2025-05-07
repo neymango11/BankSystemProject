@@ -5,8 +5,8 @@
 
 public class SavingsAccount extends BankAccount {
 
-    // Stores the interest rate based on the account's balance
-    private double interestRate;
+    // Stores the Annual Percentage Yield (APY) based on the account's balance
+    private double apy;
 
     /**
      * Constructor for the SavingsAccount
@@ -19,8 +19,16 @@ public class SavingsAccount extends BankAccount {
         // Call the constructor of BankAccount and pass in the correct values
         super(accountId, userID, balance, "SAVING");
 
-        // Set the initial interest rate based on the starting balance
-        this.interestRate = determineInterestRate(balance);
+        // Set the initial APY based on the starting balance
+        this.apy = calculateAPY(balance);
+    }
+
+    /**
+     * Gets the current APY for this savings account
+     * @return The current APY as a decimal (e.g., 0.05 for 5%)
+     */
+    public double getAPY() {
+        return apy;
     }
 
     /**
@@ -28,11 +36,11 @@ public class SavingsAccount extends BankAccount {
      * Uses the current balance to determine the rate and updates the account.
      */
     public void applyInterest() {
-        // Recalculate the interest rate in case the balance changed
-        interestRate = determineInterestRate(getBalance());
+        // Recalculate the APY in case the balance changed
+        updateAPY();
 
         // Convert APY to monthly rate
-        double monthlyRate = interestRate / 12;
+        double monthlyRate = apy / 12;
 
         // Calculate earned interest
         double interest = getBalance() * monthlyRate;
@@ -42,18 +50,44 @@ public class SavingsAccount extends BankAccount {
     }
 
     /**
-     * Determines the correct APY based on balance.
-     *
-     * @param balance The current balance
-     * @return The APY as a decimal (e.g., 0.01 = 1%)
+     * Calculates the Annual Percentage Yield (APY) based on the account balance
+     * Different tiers of APY are offered based on the balance amount
+     * @param balance Current balance in the account
+     * @return APY rate as a decimal (e.g., 0.05 for 5%)
      */
-    private double determineInterestRate(double balance) {
-        if (balance >= 5000) {
-            return 0.015; // 1.5%
-        } else if (balance >= 1000) {
-            return 0.01;  // 1.0%
-        } else {
-            return 0.005; // 0.5%
+    private double calculateAPY(double balance) {
+        if (balance >= 10000) return 0.05;      // 5% APY for $10,000+
+        if (balance >= 5000) return 0.03;       // 3% APY for $5,000+
+        if (balance >= 1000) return 0.02;       // 2% APY for $1,000+
+        return 0.01;                           // 1% APY for < $1,000
+    }
+
+    /**
+     * Updates the APY when the account balance changes
+     * This ensures the correct interest rate is applied based on the current balance
+     */
+    private void updateAPY() {
+        this.apy = calculateAPY(getBalance());
+    }
+
+    @Override
+    public void deposit(double amount) {
+        super.deposit(amount);
+        updateAPY();
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        super.withdraw(amount);
+        updateAPY();
+    }
+
+    @Override
+    public boolean transfer(BankAccount destinationAccount, double amount) {
+        boolean success = super.transfer(destinationAccount, amount);
+        if (success) {
+            updateAPY();
         }
+        return success;
     }
 }
