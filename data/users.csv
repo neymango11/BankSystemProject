@@ -33,11 +33,8 @@ admin,admin123,STANDARD USER,1030
 admin,admin123,STANDARD USER,1031
 aman,2002,STANDARD USER,1032
 admin,admin123,STANDARD USER,1033
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 admin,admin123,STANDARD USER,1034
 admin,admin123,STANDARD USER,1035
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+admin,admin123,STANDARD USER,1036
+admin,admin123,STANDARD USER,1037
+b,2,STANDARD USER,1038

@@ -1,18 +1,24 @@
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-
 import java.io.*;
 import java.util.*;
 
+/**
+ * UserCSV class handles all file operations for user data.
+ * It provides methods to load users from and save users to a CSV file.
+ * The CSV file stores user information in the format: username,password,role,userID
+ */
 public class UserCSV {
+    // Path to the CSV file storing user data
     private static final String CSV_FILE_PATH = "data/users.csv";
 
     /**
-     * Loads all users from the CSV file using OpenCSV
+     * Loads all users from the CSV file
+     * Creates the data directory if it doesn't exist
+     * Handles various error cases and data validation
      * @return List of User objects loaded from the file
      */
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
+
         try {
             // Create data directory if it doesn't exist
             File dataDir = new File("data");
@@ -26,40 +32,64 @@ public class UserCSV {
                 return users;
             }
 
-            // OpenCSV reader setup
-            try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
-                String[] line;
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
                 boolean skipHeader = true;
+                int lineNumber = 0;
 
-                while ((line = csvReader.readNext()) != null) {
+                while ((line = br.readLine()) != null) {
+                    lineNumber++;
                     if (skipHeader) {
                         skipHeader = false;
-                        continue; // Skip header row
+                        continue;
                     }
 
-                    // Parse user data from CSV row
-                    String username = line[0].trim();
-                    String password = line[1].trim();
-                    String role = line[2].trim();
-                    int userID = Integer.parseInt(line[3].trim());
+                    try {
+                        String[] parts = line.split(",");
+                        if (parts.length != 4) {
+                            System.err.println("Warning: Invalid data format at line " + lineNumber + ". Skipping.");
+                            continue;
+                        }
 
-                    // Add to list based on role
-                    if (role.equalsIgnoreCase("ADMIN")) {
-                        users.add(new Admin(username, password, userID));
-                    } else {
-                        users.add(new User(username, password, role, userID));
+                        String username = parts[0].trim();
+                        String password = parts[1].trim();
+                        String role = parts[2].trim();
+
+                        if (username.isEmpty() || password.isEmpty() || role.isEmpty()) {
+                            System.err.println("Warning: Empty fields at line " + lineNumber + ". Skipping.");
+                            continue;
+                        }
+
+                        int userID;
+                        try {
+                            userID = Integer.parseInt(parts[3].trim());
+                        } catch (NumberFormatException e) {
+                            System.err.println("Warning: Invalid userID at line " + lineNumber + ". Skipping.");
+                            continue;
+                        }
+
+                        if (role.equalsIgnoreCase("ADMIN")) {
+                            users.add(new Admin(username, password, userID));
+                        } else {
+                            users.add(new User(username, password, role, userID));
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Warning: Error processing line " + lineNumber + ": " + e.getMessage());
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println("❌ Error loading users from CSV: " + e.getMessage());
+            System.err.println("❌ Critical error loading users from CSV: " + e.getMessage());
             e.printStackTrace();
         }
+
         return users;
     }
 
     /**
-     * Saves all users to the CSV file using OpenCSV
+     * Saves all users to the CSV file
+     * Creates a backup of the existing file before saving
+     * Handles various error cases and data validation
      * @param users List of User objects to save
      * @return true if save was successful, false otherwise
      */
@@ -76,8 +106,8 @@ public class UserCSV {
                 throw new IOException("Failed to create data directory");
             }
 
-            File file = new File(CSV_FILE_PATH);
             // Create backup of existing file if it exists
+            File file = new File(CSV_FILE_PATH);
             if (file.exists()) {
                 File backup = new File(CSV_FILE_PATH + ".backup");
                 if (backup.exists()) {
@@ -88,30 +118,52 @@ public class UserCSV {
                 }
             }
 
-            // OpenCSV writer setup
-            try (CSVWriter writer = new CSVWriter(new FileWriter(file))) {
-                // Write the CSV header
-                writer.writeNext(new String[]{"username", "password", "role", "userID"});
-
-                // Write each user to the CSV
+            // Write new file
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write("username,password,role,userID\n");
                 for (User user : users) {
                     if (user == null) {
                         System.err.println("Warning: Skipping null user in save operation");
                         continue;
                     }
-                    writer.writeNext(new String[]{
-                            user.getUsername(),
-                            user.getPassword(),
-                            user.getRole(),
-                            String.valueOf(user.getUserID())
-                    });
+
+                    String username = user.getUsername();
+                    String password = user.getPassword();
+                    String role = user.getRole();
+                    int userID = user.getUserID();
+
+                    if (username == null || password == null || role == null) {
+                        System.err.println("Warning: Skipping user with null fields");
+                        continue;
+                    }
+
+                    writer.write(String.format("%s,%s,%s,%d%n",
+                            username.replace(",", ";"), // Prevent CSV injection
+                            password.replace(",", ";"),
+                            role.replace(",", ";"),
+                            userID));
                 }
                 System.out.println("✅ Users saved to " + CSV_FILE_PATH);
                 return true;
             }
         } catch (IOException e) {
-            System.err.println("❌ Error saving users to CSV: " + e.getMessage());
+            System.err.println("❌ Critical error saving users to CSV: " + e.getMessage());
             e.printStackTrace();
+
+            // Try to restore from backup
+            try {
+                File backup = new File(CSV_FILE_PATH + ".backup");
+                if (backup.exists()) {
+                    File current = new File(CSV_FILE_PATH);
+                    if (current.exists()) {
+                        current.delete();
+                    }
+                    backup.renameTo(current);
+                    System.out.println("Restored users file from backup");
+                }
+            } catch (Exception restoreError) {
+                System.err.println("Failed to restore from backup: " + restoreError.getMessage());
+            }
             return false;
         }
     }
