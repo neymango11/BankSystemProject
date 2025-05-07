@@ -1,79 +1,65 @@
 /**
- * Represents a basic user (not admin) of the banking system.
- * This class handles user authentication and basic user management functionality.
- * Each user has a unique ID, username, password, and role.
+ * User class is essentail for managing users accounts and permissions
+ * The User class represents a user in the banking system
+ * Contains user details:
+ * username: The login name for the user
+ * password: The user's authentication password
+ * role: The role assigned to the user (e.g., "STANDARD USER")
+ * userID: A unique identifier for each user
+ *
+ * This class provides functionality to:
+ * Get the user's details through getter methods (username, password, role, and userID)
+ * Change a user's password through the setPassword method, ensuring the current password is correct and the new one is different.
+ * Allows admins to:
+ * Reset the user's password using the resetPassword method.
+ * To change the username using the forceSetUsername method.
  */
+
+
 public class User {
-    // User's login name
-    private String username;
-    // User's password for authentication
-    private String password;
-    // User's role in the system (e.g., "STANDARD USER")
-    private String role;
-    // Unique identifier for the user
-    private int userID;
+    private String username;  // User's login name
+    private String password;  // User's password for authentication
+    private String role;      // User's role in the system (e.g., "STANDARD USER")
+    private int userID;       // Unique identifier for the user
 
-    // Counter to generate unique user IDs
-    private static int idCounter = 1000;
+    private static int idCounter = 1000;  // Counter to generate unique user IDs
 
-    /**
-     * Creates a new user with the specified credentials
-     * @param username The user's login name
-     * @param password The user's password
-     * @param role The user's role (will be set to "STANDARD USER")
-     * @param userID Optional user ID. If null, a new ID will be generated
-     */
     public User(String username, String password, String role, Integer userID) {
         this.username = username;
         this.password = password;
-        this.role = "STANDARD USER";
+        this.role = "STANDARD USER";  // Default role is "STANDARD USER"
         if (userID != null) {
-            this.userID = userID;
-            // Update idCounter if this userID is higher
-            if (userID >= idCounter) {
+            this.userID = userID;  // Use provided userID if given
+            if (userID >= idCounter) {  // Ensure idCounter is updated if the provided userID is larger
                 idCounter = userID + 1;
             }
         } else {
-            this.userID = idCounter++;
+            this.userID = idCounter++;  // Generate new user ID if not provided
         }
     }
 
-    // Standard getter methods
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
-    public String getRole() { return role; }
-    public int getUserID() { return userID; }
+    public String getUsername() { return username; }  // Return username
+    public String getPassword() { return password; }  // Return password
+    public String getRole() { return role; }          // Return role
+    public int getUserID() { return userID; }          // Return userID
 
-    /**
-     * Allows a user to change their own password
-     * @param currentPassword The user's current password for verification
-     * @param newPassword The new password to set
-     */
     public void setPassword(String currentPassword, String newPassword) {
-        if (!this.password.equals(currentPassword)) {
-            System.out.println("❌ Incorrect current password.");
-        } else if (newPassword.equals(this.password)) {
-            System.out.println("❌ New password must be different.");
+        if (!this.password.equals(currentPassword)) {  // Check if current password is correct
+            System.out.println("Incorrect current password.");
+        } else if (newPassword.equals(this.password)) {  // Ensure new password is different from the old one
+            System.out.println("New password must be different.");
         } else {
-            this.password = newPassword;
-            System.out.println("✅ Password changed successfully.");
+            this.password = newPassword;  // Set new password
+            System.out.println("Password changed successfully.");
         }
     }
 
-    /**
-     * Allows an admin to reset a user's password
-     * @param newPassword The new password to set
-     */
     public void resetPassword(String newPassword) {
-        this.password = newPassword;
-        System.out.println("✅ Admin reset the password.");
+        this.password = newPassword;  // Admin resets password
+        System.out.println("Admin reset the password.");
     }
 
-    /**
-     * Allows an admin to change a user's username
-     * @param newUsername The new username to set
-     */
     void forceSetUsername(String newUsername) {
-        this.username = newUsername;
+        this.username = newUsername; // Admin changes username
     }
 }

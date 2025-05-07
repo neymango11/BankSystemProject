@@ -21,7 +21,7 @@ public class DemoMain {
         try {
             users = UserCSV.loadUsers();
         } catch (Exception e) {
-            System.err.println("❌ Critical error loading users: " + e.getMessage());
+            System.err.println("Critical error loading users: " + e.getMessage());
             System.err.println("Starting with empty user list");
             users = new ArrayList<>();
         }
@@ -113,7 +113,7 @@ public class DemoMain {
                                 System.err.println("Warning: Failed to save new user to CSV");
                             }
 
-                            System.out.println("✅ User account created successfully!");
+                            System.out.println("User account created successfully!");
 
                             // Prompt for bank account creation
                             System.out.println("\n=== Create Bank Accounts ===");
@@ -149,7 +149,7 @@ public class DemoMain {
                                         }
 
                                         checkingAccount = BankAccount.createChecking(username, newUser.getUserID(), checkingDeposit);
-                                        System.out.println("✅ Checking account created with balance: $" + checkingDeposit);
+                                        System.out.println("Checking account created with balance: $" + checkingDeposit);
                                     } catch (NumberFormatException e) {
                                         System.err.println("Invalid deposit amount");
                                     }
@@ -167,7 +167,7 @@ public class DemoMain {
                                         }
 
                                         savingsAccount = BankAccount.createSavings(username, newUser.getUserID(), savingsDeposit);
-                                        System.out.println("✅ Savings account created with balance: $" + savingsDeposit);
+                                        System.out.println("Savings account created with balance: $" + savingsDeposit);
                                         System.out.println("Current APY: " + (savingsAccount.getAPY() * 100) + "%");
                                     } catch (NumberFormatException e) {
                                         System.err.println("Invalid deposit amount");
@@ -197,8 +197,8 @@ public class DemoMain {
                                         checkingAccount = BankAccount.createChecking(username, newUser.getUserID(), checkDeposit);
                                         savingsAccount = BankAccount.createSavings(username, newUser.getUserID(), saveDeposit);
 
-                                        System.out.println("✅ Checking account created with balance: $" + checkDeposit);
-                                        System.out.println("✅ Savings account created with balance: $" + saveDeposit);
+                                        System.out.println("Checking account created with balance: $" + checkDeposit);
+                                        System.out.println("Savings account created with balance: $" + saveDeposit);
                                         System.out.println("Current APY: " + (savingsAccount.getAPY() * 100) + "%");
                                     } catch (NumberFormatException e) {
                                         System.err.println("Invalid deposit amount");
@@ -237,7 +237,7 @@ public class DemoMain {
                             }
 
                             if (loggedInUser != null) {
-                                System.out.println("✅ Login successful!");
+                                System.out.println("Login successful!");
                                 handleUserOperations(loggedInUser, scanner);
                             } else {
                                 System.err.println("❌ Invalid username or password.");

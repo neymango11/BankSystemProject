@@ -1,100 +1,65 @@
 import java.util.List;
 
 /**
- * Admin class extends User to provide administrative functionality.
- * Admins have additional privileges to manage users and accounts in the banking system.
- * They can create users, remove users, reset passwords, and manage bank accounts.
+ * The Admin class extends the User class to provide admin functionality in the banking system.
+ * It allows admins to manage user accounts, including creating, removing, and modifying user details.
+ * The class contains methods for:
+ * - Creating new users: The createUser method allows the admin to create a new user account.
+ * - Removing users: The removeUserById method removes a user from the system based on their userID.
+ * - Managing user credentials:
+ *   - resetUserPassword method allows admins to reset a user's password.
+ *   - resetUserUsername method enables admins to change a user's username.
+ * - Viewing users: The viewAllUsers method displays a list of all users in the system.
+ *
+ * Additionally, admins can manage user bank accounts with the following methods:
+ * - depositToUserAccount: Allows admins to deposit funds into a user's bank account.
+ * - withdrawFromUserAccount: Allows admins to withdraw funds from a user's bank account.
+ * - viewAccountBalance: Displays the current balance of a user's bank account.
  */
+
 public class Admin extends User {
 
-    /**
-     * Creates a new admin user
-     * @param username Admin's login name
-     * @param password Admin's password
-     * @param userID Optional user ID. If null, a new ID will be generated
-     */
     public Admin(String username, String password, Integer userID) {
-        super(username, password, "ADMIN", userID);
+        super(username, password, "ADMIN", userID);  // Calls the parent constructor with "ADMIN" role
     }
 
-    /**
-     * Creates a new standard user in the system
-     * @param username New user's login name
-     * @param password New user's password
-     * @param role New user's role
-     * @param userID Optional user ID. If null, a new ID will be generated
-     * @return The newly created User object
-     */
     public User createUser(String username, String password, String role, Integer userID) {
-        return new User(username, password, role, userID);
+        return new User(username, password, role, userID);  // Creates a new user with the provided details
     }
 
-    /**
-     * Removes a user from the system by their ID
-     * @param userList List of all users in the system
-     * @param targetUserID ID of the user to remove
-     */
     public void removeUserById(List<User> userList, int targetUserID) {
-        userList.removeIf(user -> user.getUserID() == targetUserID);
-        System.out.println("✅ Removed user with ID " + targetUserID);
+        userList.removeIf(user -> user.getUserID() == targetUserID);  // Removes the user with the specified ID
+        System.out.println("Removed user with ID " + targetUserID);
     }
 
-    /**
-     * Resets a user's password to a new value
-     * @param user The user whose password to reset
-     * @param newPassword The new password to set
-     */
     public void resetUserPassword(User user, String newPassword) {
-        user.resetPassword(newPassword);
+        user.resetPassword(newPassword);  // Resets the user's password to the new one
     }
 
-    /**
-     * Changes a user's username to a new value
-     * @param user The user whose username to change
-     * @param newUsername The new username to set
-     */
     public void resetUserUsername(User user, String newUsername) {
-        user.forceSetUsername(newUsername);
-        System.out.println("✅ Changed username to: " + newUsername);
+        user.forceSetUsername(newUsername);  // Changes the user's username
+        System.out.println("Changed username to: " + newUsername);
     }
 
-    /**
-     * Displays information about all users in the system
-     * @param userList List of all users to display
-     */
     public void viewAllUsers(List<User> userList) {
         for (User user : userList) {
-            System.out.println("👤 ID: " + user.getUserID() +
+            System.out.println("ID: " + user.getUserID() +  // Displays each user's information
                     ", Username: " + user.getUsername() +
                     ", Role: " + user.getRole());
         }
     }
 
-    /**
-     * Deposits money into any user's bank account
-     * @param account The account to deposit into
-     * @param amount The amount to deposit
-     */
     public void depositToUserAccount(BankAccount account, double amount) {
-        account.deposit(amount);
-        System.out.println("✅ Admin deposited $" + amount + " to account " + account.getAccountID());
+        account.deposit(amount);  // Deposits money into the specified account
+        System.out.println("Admin deposited $" + amount + " to account " + account.getAccountID());
     }
 
-    /**
-     * Withdraws money from any user's bank account
-     * @param account The account to withdraw from
-     * @param amount The amount to withdraw
-     */
     public void withdrawFromUserAccount(BankAccount account, double amount) {
-        account.withdraw(amount);
-        System.out.println("✅ Admin withdrew $" + amount + " from account " + account.getAccountID());
+        account.withdraw(amount);  // Withdraws money from the specified account
+        System.out.println("Admin withdrew $" + amount + " from account " + account.getAccountID());
     }
 
-    /**
-     * Displays the current balance of a bank account
-     * @param account The account to check
-     */
     public void viewAccountBalance(BankAccount account) {
-        System.out.println("💰 Account " + account.getAccountID() + " balance: $" + account.getBalance());
+        System.out.println("Account " + account.getAccountID() + " balance: $" + account.getBalance());  // Displays the account balance
     }
 }
